@@ -1,4 +1,3 @@
-#include <src/matrix.h>
 #include <iostream>
 #include <cmath>
 #include "matrix.h"
@@ -7,7 +6,14 @@ using namespace math;
 
 void math::Matrix::getVec(std::vector<real> &mvec) const
 {
+    // получить вектор элементов
     mvec = this->mvec_;
+}
+
+void math::Matrix::setVec(std::vector<real> &vec) {
+
+    // задвть вектор элементов
+    this->mvec_ = vec;
 }
 
 int math::Matrix::rows() const
@@ -24,44 +30,38 @@ real &Matrix::operator()(int row, int col)
 {
     if (row >= this->rows_)
     {
-        std::cerr << "Matrix: row number out of bounds" << std::endl;
-        // return 0;
+        std::cerr << "ERROR: row number out of bounds" << std::endl;
     }
     if (col >= this->cols_)
     {
-        std::cerr << "Matrix: col number out of bounds" << std::endl;
-        // return 0;
+        std::cerr << "ERROR: col number out of bounds" << std::endl;
     }
 
-    int pos{0};
-
-    pos = cols_ * row + col;
-
-    return this->mvec_.at(pos);
+    return this->mvec_.at(cols_ * row + col);
 }
 
 real Matrix::operator()(int row, int col) const
 {
     if (row >= this->rows_)
     {
-        std::cerr << "Matrix: row number out of bounds" << std::endl;
+        std::cerr << "ERROR: row number out of bounds" << std::endl;
         // return 0;
     }
     if (col >= this->cols_)
     {
-        std::cerr << "Matrix: col number out of bounds" << std::endl;
+        std::cerr << "ERROR: col number out of bounds" << std::endl;
         // return 0;
     }
 
-    int pos{0};
-
-    pos = cols_ * row + col;
-
-    return this->mvec_.at(pos);
+     return this->mvec_.at(cols_ * row + col);
 }
 
 Matrix &math::Matrix::operator+=(const Matrix &M)
 {
+    if( cols_ != M.cols_ || rows_ != M.rows_){
+        std::cerr << "ERROR: Matrixs dimensions must equal!";
+        return *this;
+    }
     for (size_t i = 0; i < this->mvec_.size(); ++i)
     {
         this->mvec_.at(i) += M.mvec_.at(i);
@@ -71,6 +71,10 @@ Matrix &math::Matrix::operator+=(const Matrix &M)
 
 Matrix &math::Matrix::operator-=(const Matrix &M)
 {
+    if( cols_ != M.cols_ || rows_ != M.rows_){
+        std::cerr << "ERROR: Matrixs dimensions must be equal!" << std::endl;
+        return *this;
+    }
     for (size_t i = 0; i < this->mvec_.size(); ++i)
     {
         this->mvec_.at(i) -= M.mvec_.at(i);
@@ -86,28 +90,27 @@ Matrix &math::Matrix::operator*=(const real n)
     }
     return *this;
 }
+void math::Matrix::clone(const Matrix &B){
+    mvec_ = B.mvec_;
+    rows_ = B.rows_;
+    cols_ = B.cols_;
+}
 Matrix& math::Matrix::operator*=(const Matrix &B)
 {
-    if (A.cols_ != B.rows_)
-    {
-        std::cerr << "Matrix: Matrices can't be multiplied!" << std::endl;
-        return Matrix(0, 0);
-    }
+    Matrix M = *this * B;
+    clone(M);
+    return *this;
+}
 
-    Matrix M(A.rows_, B.cols_);
-
-    for (int pos = 0; pos < M.mvec_.size(); ++pos)
-    {
-        int row = (int)std::floor(pos / M.cols_);
-        int col = pos - row * M.cols_;
-
-        for (int k = 0; k < A.cols_; ++k)
-        {
-            M.mvec_.at(pos) += A(row, k) * B(k, col);
+Matrix math::Matrix::transpose(){
+    Matrix M(cols_, rows_);
+    for(int r = 0; r < rows_; r++){
+        for(int c = 0; c < cols_; c++){
+            M(c, r) = (*this)(r, c);
+        
         }
     }
-
-    return *this;
+    return M;
 }
 
 namespace math
@@ -143,7 +146,7 @@ namespace math
     {
         if ((A.cols_ != B.cols_) || (A.rows_ != B.rows_))
         {
-            std::cerr << "Matrix: Matrices can't be added!" << std::endl;
+            std::cerr << "ERROR: Matrixs dimensions must be equal!" << std::endl;
             return Matrix(0, 0);
         }
 
@@ -161,7 +164,7 @@ namespace math
     {
         if ((A.cols_ != B.cols_) || (A.rows_ != B.rows_))
         {
-            std::cerr << "Matrix: Matrices can't be subtracted!" << std::endl;
+            std::cerr << "ERROR: Matrixs dimensions must be equal!" << std::endl;
             return Matrix(0, 0);
         }
 
@@ -179,7 +182,7 @@ namespace math
     {
         if (A.cols_ != B.rows_)
         {
-            std::cerr << "Matrix: Matrices can't be multiplied!" << std::endl;
+            std::cerr << "ERROR: Matrixs dimensions must be equal!" << std::endl;
             return Matrix(0, 0);
         }
 

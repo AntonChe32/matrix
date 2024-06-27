@@ -9,7 +9,6 @@ namespace math
     #else
         typedef float real;
     #endif
-
     /**
      * @brief Класс матриц
     */
@@ -37,7 +36,15 @@ namespace math
         /// @brief получить одномерный вектор элементов
         /// @param[out] mvec вектор элементов матрицы
         void getVec(std::vector<real>& mvec) const;
-
+        /// @brief установить одномерный вектор
+        /// @param vec вектор элементов матрицы
+        void setVec(std::vector<real> &vec);
+        /// @brief клонировать матрицу
+        /// @param B клонируемая матрица
+        void clone(const Matrix &B);
+        /// @brief Транспонирование матрицы
+        /// @return Новая транвпонированная матрица
+        Matrix transpose();
         /// @brief количество строк в матрице
         /// @return 
         int rows() const;
@@ -80,7 +87,7 @@ namespace math
         /// @param A 
         /// @param B 
         /// @return 
-        friend Matrix operator*(const Matrix& A, const Matrix& B);
+        friend Matrix operator*(const Matrix& B);
 
 		/// @brief оператор сложения матриц с присваимванием
 		/// @param M 
@@ -96,5 +103,9 @@ namespace math
 		/// @param M 
 		/// @return 
 		Matrix& operator*=(const real n);
+		Matrix& operator*=(const Matrix& B);
+        friend Matrix operator*(const Matrix &A, const Matrix &B);
+
     };
+
 } // namespace math

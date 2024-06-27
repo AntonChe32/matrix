@@ -9,3 +9,4 @@ src/tmp
 src/tmp.cpp
 src/ops
 .errlog
+matrix_class
