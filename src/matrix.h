@@ -25,13 +25,16 @@ namespace math
         std::vector<real> mvec_;
     public:
         /// @brief конструктор по умолчанию
-        Matrix(){};
-
+        Matrix(){
+            std::cout << "Constructor by default called" << std::endl;
+        }
         /// @brief конструктор с параметрами -создает матрицу размерности rows x cols, заполненную
         /// нулевыми значениями
         /// @param rows количество строк в матрице
         /// @param cols количество столбцов в матрице
-        Matrix(int rows, int cols) : cols_(cols), rows_(rows), mvec_(std::vector<real>(rows * cols)) {};
+        Matrix(int rows, int cols) : cols_(cols), rows_(rows), mvec_(std::vector<real>(rows * cols)) {
+            std::cout << "Constructor with parameter called" << std::endl;
+        }
         
         /// @brief получить одномерный вектор элементов
         /// @param[out] mvec вектор элементов матрицы

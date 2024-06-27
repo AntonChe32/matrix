@@ -23,7 +23,7 @@ int main()
     M1 += M2;
     std::cout << "Add M2 to M1: \n"
               << M1 << std::endl;
-
+    std::cout << "pretranspose" << std::endl;
     math::Matrix M3 = M1.transpose();
     std::cout << "Transpose M1 to M3" << std::endl << M3 << std::endl;
 
